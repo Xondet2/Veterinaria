@@ -15,3 +15,6 @@ tools/plantuml.jar
 
 # Logs
 *.log
+
+# Env files
+.env*
