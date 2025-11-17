@@ -1,0 +1,22 @@
+import next from 'eslint-config-next'
+
+const config = [
+  ...next,
+  {
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      'build/**',
+      'springboot/**',
+      'springboot/**/target/**',
+      'springboot/**/build/**',
+      'springboot/**/generated-sources/**'
+    ],
+    rules: {
+      'react-hooks/set-state-in-effect': 'off'
+    }
+  }
+]
+
+export default config
