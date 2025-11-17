@@ -1,0 +1,25 @@
+@startuml
+title Despliegue SGV
+
+node "Cliente (Navegador)" as Browser
+node "Frontend Hosting (Vercel/Local 3000)" as FrontHost
+node "Backend Server (Spring Boot 8080)" as BackHost
+database "Base de Datos (PostgreSQL prod / H2 dev)" as DB
+
+Browser --> FrontHost : HTTPS
+FrontHost --> BackHost : HTTPS (API JWT)
+BackHost --> DB : JDBC
+
+rectangle "Observabilidad" {
+  [Logs]
+}
+BackHost --> [Logs]
+
+note bottom of FrontHost
+Next.js 15 (App Router)
+end note
+
+note bottom of BackHost
+Spring Boot 3.3 + SecurityFilterChain
+end note
+@enduml

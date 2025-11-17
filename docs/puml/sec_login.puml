@@ -1,0 +1,27 @@
+@startuml
+title Secuencia: Login y uso de JWT
+
+actor Usuario
+participant Frontend as FE
+participant Backend as BE
+participant Security as SEC
+
+Usuario -> FE: Ingresa credenciales
+FE -> BE: POST /api/auth/login {email, password}
+BE -> SEC: Autenticación (BCrypt)
+SEC --> BE: Genera JWT {sub=id, rol}
+BE --> FE: 200 OK {token}
+FE -> FE: Guarda token en localStorage
+
+loop llamadas autenticadas
+FE -> BE: GET /api/mascotas (Authorization: Bearer)
+BE -> SEC: JwtAuthenticationFilter valida token
+SEC --> BE: Principal=id, Authority=ROLE_<rol>
+BE --> FE: 200 OK {data}
+end
+
+alt token inválido/expirado
+BE --> FE: 401/403
+FE -> FE: limpia token y redirige /login
+end
+@enduml

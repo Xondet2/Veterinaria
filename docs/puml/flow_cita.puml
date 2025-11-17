@@ -1,0 +1,32 @@
+@startuml
+title Secuencia: Crear y confirmar cita
+
+actor Dueño
+actor Admin
+actor Veterinario
+participant FE as Frontend
+participant BE as Backend
+participant Citas as CitaService
+participant Repo as MascotaRepository
+
+== Creación de cita por Dueño ==
+Dueño -> FE: selecciona mascota, veterinario, fecha/hora
+FE -> BE: POST /api/citas {mascotaId, veterinarioId, fechaHora, duracion, motivo}
+BE -> Citas: validar conflicto de horario
+Citas --> BE: OK / 409 conflicto
+BE --> FE: 201 {cita: estado=agendada} / 409
+
+== Creación de cita por Admin/Veterinario ==
+Admin -> FE: crea cita sin dueñoId
+FE -> BE: POST /api/citas {...}
+BE -> Repo: obtener mascota por mascotaId
+Repo --> BE: mascota(dueñoId)
+BE -> Citas: crear cita con dueñoId inferido
+BE --> FE: 201 {cita}
+
+== Confirmación de cita ==
+Veterinario -> FE: confirma cita
+FE -> BE: PATCH /api/citas/{id}/estado {estado: confirmada}
+BE -> Citas: actualizar estado
+BE --> FE: 200 {estado: confirmada}
+@enduml
