@@ -292,6 +292,11 @@ docker run -p 3000:3000 vetclinic
 - `/docs/ARQUITECTURA.md` - Arquitectura técnica
 - `/docs/DIAGRAMAS.md` - Diagramas ER, flujos, casos de uso
 
+### Wiki de GitHub
+- La wiki se publica automáticamente desde `wiki_content/` cuando está habilitada.
+- Enlace: `https://github.com/Xondet2/Veterinaria/wiki`
+- Si la wiki no está habilitada, activa en Settings → Wikis. El workflow `Publicar Wiki` sincroniza las páginas e imágenes.
+
 ## Soporte
 
 Para reportar bugs o solicitar features, crea un issue en el repositorio.
