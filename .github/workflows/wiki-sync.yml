@@ -14,6 +14,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Configurar Java para PlantUML (opcional)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Preparar entorno
         run: |
           git config user.name "github-actions"
@@ -32,6 +38,17 @@ jobs:
           cp -r wiki_content/* wiki/
           git -C wiki add .
           git -C wiki commit -m "docs(wiki): sincronizar contenido desde repo principal"
+
+      - name: Copiar imágenes de diagramas si existen
+        if: steps.clone.outcome == 'success'
+        run: |
+          if ls docs/diagrams/*.svg 1> /dev/null 2>&1; then
+            cp -r docs/diagrams/*.svg wiki/images/
+            git -C wiki add images/*.svg || true
+            git -C wiki commit -m "docs(wiki): actualizar imágenes de diagramas" || true
+          else
+            echo "No se encontraron imágenes SVG en docs/diagrams/."
+          fi
 
       - name: Publicar
         if: steps.clone.outcome == 'success'

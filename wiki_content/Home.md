@@ -17,3 +17,6 @@
 
 ## Vista rápida
 ![Arquitectura](images/arquitectura.svg)
+
+## Retroalimentación
+- Envía comentarios o sugerencias en `https://github.com/Xondet2/Veterinaria/issues/new/choose`
