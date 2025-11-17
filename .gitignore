@@ -1,0 +1,17 @@
+# Node/Next.js
+node_modules/
+.next/
+.vercel/
+
+# IDE/OS
+.vscode/
+.DS_Store
+
+# Build (Spring Boot)
+springboot/target/
+
+# Tools
+tools/plantuml.jar
+
+# Logs
+*.log
