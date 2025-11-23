@@ -1,4 +1,10 @@
-# Glosario
+# GLOSARIO
+
+## Navegación
+- Arquitectura: `docs/ARQUITECTURA.md`
+- Funcionalidades: `docs/FUNCIONALIDADES.md`
+- Modelo de datos: `docs/MODELO_DATOS.md`
+- Diagramas: `docs/DIAGRAMAS.md`
 
 - JWT: Token de acceso firmado que incluye identificador de usuario (`sub`) y `rol`.
 - RBAC: Control de acceso basado en roles (admin, veterinario, dueño).

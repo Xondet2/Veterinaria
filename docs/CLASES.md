@@ -1,4 +1,10 @@
-# Clases (Dominios principales)
+# CLASES - DOMINIOS PRINCIPALES
+
+## Navegación
+- Arquitectura: `docs/ARQUITECTURA.md`
+- Modelo de datos (ER): `docs/MODELO_DATOS.md`
+- Diagramas: `docs/DIAGRAMAS.md`
+- Glosario: `docs/GLOSARIO.md`
 
 - Diagrama: ![Clases](diagrams/clases.svg)
 

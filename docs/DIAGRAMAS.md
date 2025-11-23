@@ -1,5 +1,19 @@
 # DIAGRAMAS - SISTEMA DE GESTIÓN VETERINARIA
 
+## Estado y Navegación
+
+- Diagramas actualizados se encuentran en:
+  - `docs/diagrams/*.svg`
+  - fuentes PlantUML en `docs/puml/*.puml`
+- Arquitectura refleja Next.js (frontend) comunicándose con Spring Boot (backend) vía REST con JWT.
+- ER incluye entidades: `Usuario`, `Mascota`, `Cita`, `HistorialMedico`, `Certificado`, `Vacuna`, `AuditLog`.
+
+Enlaces:
+- Arquitectura: `docs/diagrams/arquitectura.svg`
+- ER: `docs/diagrams/er.svg`
+- Flujo de cita: `docs/diagrams/flow_cita.svg`
+- Permisos: `docs/diagrams/permisos.svg`
+
 ## 1. DIAGRAMA DE CASOS DE USO
 
 ### Actores

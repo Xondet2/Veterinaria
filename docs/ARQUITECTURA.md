@@ -1,5 +1,37 @@
 # ARQUITECTURA TÉCNICA - SISTEMA DE GESTIÓN VETERINARIA
 
+## Resumen Actualizado
+
+- Frontend: `Next.js 15.5.6` (React 18), TypeScript, Tailwind CSS v4, componentes `components/ui/*` estilo shadcn, iconos `lucide-react`, notificaciones `sonner`.
+- Backend: `Spring Boot 3.3.x` (Java 17+), JPA/Hibernate, BD `H2` local (modo PostgreSQL), JWT con `io.jsonwebtoken`, contraseñas `BCrypt`.
+- Comunicación: REST JSON en `http://localhost:8080/api/*` consumido desde `lib/api.ts` con `Authorization: Bearer <token>`.
+- Seguridad: RBAC con `@PreAuthorize` y filtros JWT en `springboot/src/main/java/com/sophie/veterinaria/security/*`.
+
+### Estructura Principal
+- `app/(dashboard)/dashboard/*`: páginas de panel, módulos de `mascotas`, `citas`, `historial`, `certificados`, `vacunas`, `configuracion`.
+- `app/admin/usuarios/page.tsx`: administración de usuarios (solo `admin`).
+- `components/layout/*`: `sidebar`, `navigation`, `role-guard`, `auth-guard`.
+- `components/ui/*`: librería de UI reutilizable.
+- `lib/api.ts`: cliente HTTP; `lib/locale.ts`: textos i18n; `lib/utils.ts`: utilidades.
+- `springboot/src/main/java/com/sophie/veterinaria/*`: controladores, servicios, repositorios, seguridad, entidades.
+- `springboot/src/main/resources/application.yml`: configuración (puerto, BD, JWT).
+
+### Endpoints Principales
+- Autenticación: `POST /api/auth/login`, `POST /api/auth/register`, `GET /api/health`.
+- Usuarios: `GET /api/usuarios/veterinarios`, `GET /api/usuarios/dueños`.
+- Búsqueda: `GET /api/search?type=...&q=...`, `GET /api/search/usuarios?q=...` (admin).
+- Mascotas: `GET /api/mascotas`, `POST /api/mascotas`, `DELETE /api/mascotas/{id}`.
+- Citas: `GET /api/citas`, `POST /api/citas`, `PATCH /api/citas/{id}/estado`, `DELETE /api/citas/{id}`.
+- Historial: `GET /api/historial?mascota=<UUID>`, `POST /api/historial`, `DELETE /api/historial/{id}`.
+- Certificados: `GET /api/certificados?mascota=<UUID>`, `POST /api/certificados`, `DELETE /api/certificados/{id}`.
+- Vacunas: `GET /api/vacunas?mascota=<UUID>`, `POST /api/vacunas`, `DELETE /api/vacunas/{id}`.
+- Administración: `GET /api/admin/usuarios`, `DELETE /api/admin/usuarios/{id}`, flujos de roles: `GET /api/admin/roles/pendientes`, `POST /api/admin/roles/{id}/aprobar|rechazar`.
+
+### Documentación Relacionada
+- `docs/FUNCIONALIDADES.md`: detalle funcional por módulo.
+- `docs/DIAGRAMAS.md`: diagramas actualizados de arquitectura, ER y flujos.
+- `docs/DESPLIEGUE.md`: ejecución local y notas de configuración.
+
 ## 1. STACK TECNOLÓGICO
 
 ### Frontend

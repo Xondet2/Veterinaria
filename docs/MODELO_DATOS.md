@@ -1,8 +1,14 @@
 # MODELO DE DATOS - SISTEMA DE GESTIÓN VETERINARIA
 
-## 1. TABLAS PRINCIPALES
+## Navegación
+- Arquitectura: `docs/ARQUITECTURA.md`
+- Diagramas (ER): `docs/DIAGRAMAS.md`
+- Clases: `docs/CLASES.md`
+- Glosario: `docs/GLOSARIO.md`
 
-### 1.1 Tabla: USUARIOS
+## Tablas Principales
+
+### Tabla: USUARIOS
 
 **Propósito**: Almacenar información de todos los usuarios del sistema
 
@@ -38,7 +44,7 @@
 
 ---
 
-### 1.2 Tabla: MASCOTAS
+### Tabla: MASCOTAS
 
 **Propósito**: Registro de todas las mascotas del sistema
 
@@ -79,7 +85,7 @@
 
 ---
 
-### 1.3 Tabla: CITAS
+### Tabla: CITAS
 
 **Propósito**: Gestión de citas médicas veterinarias
 
@@ -118,7 +124,7 @@
 
 ---
 
-### 1.4 Tabla: HISTORIAL_MEDICO
+### Tabla: HISTORIAL_MEDICO
 
 **Propósito**: Registro de consultas y procedimientos médicos
 
@@ -156,7 +162,7 @@
 
 ---
 
-### 1.5 Tabla: CERTIFICADOS
+### Tabla: CERTIFICADOS
 
 **Propósito**: Generación y control de certificados sanitarios
 
@@ -194,7 +200,7 @@
 
 ---
 
-### 1.6 Tabla: VACUNAS
+### Tabla: VACUNAS
 
 **Propósito**: Tracking de esquema de vacunación
 
@@ -221,7 +227,7 @@
 
 ---
 
-### 1.7 Tabla: DISPONIBILIDAD_VETERINARIOS
+### Tabla: DISPONIBILIDAD_VETERINARIOS
 
 **Propósito**: Control de disponibilidad y horarios
 
@@ -243,7 +249,7 @@
 
 ---
 
-### 1.8 Tabla: AUDIT_LOG
+### Tabla: AUDIT_LOG
 
 **Propósito**: Log inmutable de todas las operaciones
 
@@ -268,7 +274,7 @@
 
 ---
 
-### 1.9 Tabla: RECORDATORIOS
+### Tabla: RECORDATORIOS
 
 **Propósito**: Gestión de recordatorios automáticos
 
@@ -291,7 +297,7 @@
 - INDEX(estado)
 - INDEX(fecha_programada)
 
-## 2. RELACIONES
+## Relaciones
 
 \`\`\`
 USUARIOS (1) ←→ (N) MASCOTAS

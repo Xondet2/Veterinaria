@@ -1,5 +1,15 @@
 # CONTEXTO DEL SISTEMA - GESTIÓN VETERINARIA
 
+## Navegación
+- Arquitectura: `docs/ARQUITECTURA.md`
+- Funcionalidades: `docs/FUNCIONALIDADES.md`
+- Diagramas: `docs/DIAGRAMAS.md`
+- Despliegue: `docs/DESPLIEGUE.md`
+- Modelo de datos: `docs/MODELO_DATOS.md`
+- Componentes: `docs/COMPONENTES.md`
+- Clases: `docs/CLASES.md`
+- Glosario: `docs/GLOSARIO.md`
+
 ## 1. PROPÓSITO GENERAL
 
 El **Sistema de Gestión Veterinaria (SGV)** es una aplicación web integral diseñada para automatizar y optimizar los procesos administrativos, médicos y operacionales de clínicas veterinarias de cualquier tamaño.
@@ -167,6 +177,3 @@ El **Sistema de Gestión Veterinaria (SGV)** es una aplicación web integral dis
 - **Desparasitación**: 6 meses
 - **Recordatorios de vacuna**: Según fecha de próxima dosis
 - **Logs de auditoría**: Retención indefinida
-\`\`\`
-
-</markdown>

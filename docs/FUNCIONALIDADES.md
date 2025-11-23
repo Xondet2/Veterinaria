@@ -1,5 +1,18 @@
 # FUNCIONALIDADES DEL SISTEMA - GESTIÓN VETERINARIA
 
+## Resumen de Funcionalidades (Actualizado)
+
+- Autenticación: login y registro con JWT. Salud pública `GET /api/health`.
+- Administración de usuarios (admin): listado y eliminación; aprobación/rechazo de roles.
+- Mascotas: listado, creación y eliminación; dueños ven sus mascotas; veterinarios/admin pueden gestionar.
+- Citas: listado, creación, cambio de estado y eliminación; manejo de conflictos con `409`.
+- Historial médico: listado por mascota, creación y eliminación.
+- Certificados: listado por mascota, creación y eliminación.
+- Vacunas: listado por mascota, creación y eliminación.
+- Búsqueda: endpoint unificado `GET /api/search` por tipo y texto; búsqueda de usuarios para admin.
+
+> Nota: algunas funcionalidades descritas más abajo (cookies httpOnly, soft-delete, import/export CSV, PDF de certificados) están planificadas pero no implementadas en la base de código actual.
+
 ## 1. MÓDULO DE AUTENTICACIÓN Y GESTIÓN DE USUARIOS
 
 ### 1.1 Registro de Usuario
