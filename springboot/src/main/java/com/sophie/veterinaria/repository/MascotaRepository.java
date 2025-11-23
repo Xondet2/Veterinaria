@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface MascotaRepository extends JpaRepository<Mascota, UUID> {
   List<Mascota> findByDueñoAndEstado(Usuario dueño, Mascota.Estado estado);
+  List<Mascota> findByDueño(Usuario dueño);
+  boolean existsByDueñoAndNombreIgnoreCase(Usuario dueño, String nombre);
 }

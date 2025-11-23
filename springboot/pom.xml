@@ -22,7 +22,18 @@
     <dependency><groupId>io.jsonwebtoken</groupId><artifactId>jjwt-jackson</artifactId><version>0.11.5</version><scope>runtime</scope></dependency>
   </dependencies>
   <build>
+    <directory>C:/Temp/veterinaria/build</directory>
+    <outputDirectory>C:/Temp/veterinaria/classes</outputDirectory>
+    <testOutputDirectory>C:/Temp/veterinaria/test-classes</testOutputDirectory>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <failOnError>false</failOnError>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

@@ -9,6 +9,7 @@ node_modules/
 
 # Build (Spring Boot)
 springboot/target/
+springboot/build/
 
 # Tools
 tools/plantuml.jar
