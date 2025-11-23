@@ -2,18 +2,6 @@
 
 Aplicación profesional full-stack para gestión integral de clínicas veterinarias.
 
-## Características Principales
-
-- ✅ **Autenticación segura** con JWT
-- ✅ **Gestión de mascotas** con CRUD completo
-- ✅ **Agendamiento de citas** con disponibilidad en tiempo real
-- ✅ **Historial médico** con signos vitales y diagnósticos
-- ✅ **Generación de certificados** sanitarios con QR
-- ✅ **Control de vacunación** con recordatorios
-- ✅ **Panel administrativo** con estadísticas
-- ✅ **Validaciones robustas** en todos los formularios
-- ✅ **Auditoría completa** de operaciones
-
 ## Requisitos
 
 - Node.js 18+
@@ -243,38 +231,10 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 - Secuencia Login/JWT: ![Login](docs/diagrams/sec_login.svg)
 - Flujo Cita (crear/confirmar): ![Flujo Cita](docs/diagrams/flow_cita.svg)
 
-## Cómo generar las imágenes (PlantUML)
-
-```bash
-# Opción A: PlantUML CLI con Java
-# 1) Descarga plantuml.jar desde https://plantuml.com/download
-# 2) Ubícate en la raíz del repositorio
-java -jar plantuml.jar -tsvg -o docs/img docs/DIAGRAMAS.md docs/ARQUITECTURA.md
-
-# Opción B: Docker
-docker run --rm -v %cd%:/data ghcr.io/plantuml/plantuml -tsvg -o docs/img docs/DIAGRAMAS.md docs/ARQUITECTURA.md
-
-# Opción C: VS Code
-# Instala la extensión "PlantUML" y usa el comando "PlantUML: Export Current Diagram"
-```
 
 Notas:
 - Los archivos fuente `.puml` se encuentran en `docs/diagrams/puml/`.
 - Genera imágenes con: `java -jar tools/plantuml.jar -tsvg docs/diagrams/puml/*.puml` y ubícalas en `docs/diagrams/`.
-
-### Vercel (Recomendado)
-
-\`\`\`bash
-npm install -g vercel
-vercel
-\`\`\`
-
-### Docker
-
-\`\`\`bash
-docker build -t vetclinic .
-docker run -p 3000:3000 vetclinic
-\`\`\`
 
 ### Producción
 
@@ -293,13 +253,13 @@ docker run -p 3000:3000 vetclinic
 - `/docs/DIAGRAMAS.md` - Diagramas ER, flujos, casos de uso
 
 ### Wiki de GitHub
-- La wiki se publica automáticamente desde `wiki_content/` cuando está habilitada.
+- La wiki se publica automáticamente cuando se habilita en Settings → Wikis.
 - Enlace: `https://github.com/Xondet2/Veterinaria/wiki`
-- Si la wiki no está habilitada, activa en Settings → Wikis. El workflow `Publicar Wiki` sincroniza las páginas e imágenes.
+- El workflow de sincronización copia contenido actualizado desde `docs/` hacia la wiki.
 
 ## Soporte
 
-Para reportar bugs o solicitar features, crea un issue en el repositorio.
+Para reportar bugs o solicitar funcionalidades, crea un issue en el repositorio.
 
 ## Licencia
 
