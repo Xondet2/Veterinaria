@@ -1,0 +1,44 @@
+@startuml
+skinparam componentStyle rectangle
+title Arquitectura SGV (Next.js + Spring Boot)
+
+actor Usuario
+
+package "Frontend (Next.js 15)" as FE {
+  component "UI (App Router)" as UI
+  component "RoleGuard" as RoleGuard
+  component "Cliente HTTP (lib/api.ts)" as APIClient
+}
+
+package "Backend (Spring Boot 3.3)" as BE {
+  component "Controllers" as C {
+    [AuthController]
+    [AdminController]
+    [MascotaController]
+    [CitaController]
+    [HealthController]
+  }
+  component "SecurityConfig" as SecCfg
+  component "JwtAuthenticationFilter" as JwtFilter
+  component "Services" as S
+}
+
+database "DB (H2 dev / PostgreSQL prod)" as DB
+
+Usuario --> UI : HTTP GET/POST (3000)
+UI --> RoleGuard
+RoleGuard --> APIClient : verifica rol (localStorage)
+APIClient --> BE : fetch con JWT (http://localhost:8080)
+BE --> SecCfg : SecurityFilterChain
+SecCfg --> JwtFilter : añade filtro
+JwtFilter --> C : inyecta principal y rol
+C --> S : lógica de negocio
+S --> DB : JPA
+
+cloud "Health" as Health
+C --> Health : GET /api/health (público)
+
+note bottom of APIClient
+401/403 → limpia token y redirige a /login
+end note
+@enduml

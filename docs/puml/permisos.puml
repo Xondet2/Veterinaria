@@ -1,0 +1,26 @@
+@startuml
+salt
+{
+{T
++ Funcionalidad | Dueño | Veterinario | Admin
+| Registrar mascota | - | ✓ | ✓
+| Ver mascotas propias | ✓ | - | -
+| Ver todas mascotas | - | ✓* | ✓
+| Editar mascota | - | ✓ | ✓
+| Eliminar mascota | - | - | ✓
+| Agendar cita | ✓ | ✓ | ✓
+| Ver citas propias | ✓ | ✓** | ✓
+| Editar/Cancelar cita | ✓ | ✓ | ✓
+| Registrar historial | - | ✓ | ✓
+| Generar certificado | - | ✓ | ✓
+| Descargar certificado | ✓ | ✓ | ✓
+| Registrar vacuna | - | ✓ | ✓
+| Ver dashboard admin | - | - | ✓
+| Gestionar usuarios | - | - | ✓
+}
+}
+note bottom
+✓* Según alcance del rol
+✓** Citas en las que participa
+end note
+@enduml

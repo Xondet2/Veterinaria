@@ -1,0 +1,3 @@
+package com.sophie.veterinaria.repository;
+import com.sophie.veterinaria.entity.HistorialMedico; import com.sophie.veterinaria.entity.Mascota; import org.springframework.data.jpa.repository.JpaRepository; import java.util.*; import java.util.UUID;
+public interface HistorialMedicoRepository extends JpaRepository<HistorialMedico, UUID> { List<HistorialMedico> findByPetOrderByDateDesc(Mascota pet); }

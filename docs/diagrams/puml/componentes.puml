@@ -1,0 +1,41 @@
+@startuml
+skinparam componentStyle rectangle
+title Componentes SGV
+
+package "Frontend" {
+  [Dashboard] as Dash
+  [Admin UI] as AdminUI
+  [Mascotas UI] as MascotasUI
+  [Citas UI] as CitasUI
+  [RoleGuard]
+  [lib/api.ts]
+}
+
+package "Backend" {
+  [AuthController]
+  [AdminController]
+  [UsuarioController]
+  [MascotaController]
+  [CitaController]
+  [HistorialMedicoController]
+  [VacunaController]
+  [CertificadoController]
+  [SecurityConfig]
+  [JwtAuthenticationFilter]
+  [Services]
+}
+
+[lib/api.ts] --> AuthController : POST /api/auth/login
+[AdminUI] --> AdminController : usuarios CRUD
+[MascotasUI] --> MascotaController : mascotas CRUD
+[CitasUI] --> CitaController : crear/confirmar citas
+[RoleGuard] --> [lib/api.ts] : añade Authorization
+[JwtAuthenticationFilter] --> [Controllers] : Principal & Rol
+[SecurityConfig] --> [JwtAuthenticationFilter] : SecurityFilterChain
+[Services] --> MascotaController
+[Services] --> CitaController
+
+note bottom of RoleGuard
+Redirige a /login en 401/403
+end note
+@enduml

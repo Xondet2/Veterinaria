@@ -1,0 +1,80 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class Usuario {
+  id: UUID
+  email: String
+  nombre: String
+  apellido: String
+  rol: enum(admin, veterinario, dueño)
+  estado: String
+}
+
+class Mascota {
+  id: UUID
+  nombre: String
+  especie: enum
+  raza: String
+  estado: enum(activo, fallecido, desconocido)
+}
+
+class Cita {
+  id: UUID
+  fecha_hora: OffsetDateTime
+  motivo: String
+  estado: enum(agendada, confirmada, cancelada, completada)
+}
+
+class HistorialMedico {
+  id: UUID
+  temperatura: Decimal
+  frecuencia_c: Integer
+  diagnostico: String
+  tratamiento: String
+}
+
+class Certificado {
+  id: UUID
+  tipo: String
+  numero_certificado: String
+  codigo_qr: String
+  estado: enum(vigente, vencido, revocado)
+}
+
+class Vacuna {
+  id: UUID
+  nombre_vacuna: String
+  fecha_aplicacion: Date
+  fecha_proxima_dosis: Date
+}
+
+class DisponibilidadVet {
+  id: UUID
+  dia_semana: enum
+  hora_inicio: Time
+  hora_fin: Time
+}
+
+class AuditLog {
+  id: UUID
+  usuario_id: UUID
+  tipo_accion: String
+  tabla_afectada: String
+  fecha_timestamp: Timestamp
+}
+
+Usuario "1" -- "0..*" Mascota : dueño
+Mascota "1" -- "0..*" Cita
+Usuario "1" -- "0..*" Cita : veterinario
+Usuario "1" -- "0..*" Cita : dueño
+Mascota "1" -- "0..*" HistorialMedico
+Cita "1" -- "0..1" HistorialMedico
+Mascota "1" -- "0..*" Certificado
+Usuario "1" -- "0..*" Certificado : emisor
+Mascota "1" -- "0..*" Vacuna
+Usuario "1" -- "0..*" Vacuna : veterinario
+Usuario "1" -- "0..*" DisponibilidadVet : veterinario
+Usuario "1" -- "0..*" AuditLog
+
+@enduml

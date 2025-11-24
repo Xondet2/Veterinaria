@@ -1,0 +1,20 @@
+@startuml
+[*] --> ACTIVA
+
+state ACTIVA {
+}
+
+ACTIVA --> FALLECIDA : evento: fallece
+ACTIVA --> DESCONOCIDO : datos incompletos
+DESCONOCIDO --> ACTIVA
+DESCONOCIDO --> FALLECIDA
+ACTIVA --> ELIMINADA : admin elimina (soft)
+
+state FALLECIDA {
+  note "No nuevas citas; conserva historiales y certificados" as N1
+}
+
+state ELIMINADA {
+  note "No aparece en listados; datos conservados; restaurable por admin" as N2
+}
+@enduml

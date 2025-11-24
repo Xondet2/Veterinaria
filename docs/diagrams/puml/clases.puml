@@ -1,0 +1,77 @@
+@startuml
+title Diagrama de Clases (Dominios principales)
+
+class Usuario {
+  +UUID id
+  +String email
+  +String nombre
+  +String apellido
+  +Rol rol
+}
+enum Rol {
+  admin
+  veterinario
+  dueño
+}
+
+class Mascota {
+  +UUID id
+  +String nombre
+  +String especie
+  +String raza
+  +EstadoMascota estado
+}
+enum EstadoMascota {
+  activo
+  fallecido
+  desconocido
+}
+
+class Cita {
+  +UUID id
+  +OffsetDateTime fechaHora
+  +String motivo
+  +EstadoCita estado
+}
+enum EstadoCita {
+  agendada
+  confirmada
+  cancelada
+  completada
+}
+
+class HistorialMedico {
+  +UUID id
+  +Decimal temperatura
+  +Integer frecuenciaCardiaca
+  +String diagnostico
+  +String tratamiento
+}
+
+class Certificado {
+  +UUID id
+  +String tipo
+  +String numero
+  +String codigoQR
+  +EstadoCertificado estado
+}
+enum EstadoCertificado {
+  vigente
+  vencido
+  revocado
+}
+
+class Vacuna {
+  +UUID id
+  +String nombre
+  +Date fechaAplicacion
+  +Date fechaProximaDosis
+}
+
+Usuario "1" --> "0..*" Mascota : dueño
+Usuario "1" --> "0..*" Cita : veterinario/dueño
+Mascota "1" --> "0..*" Cita
+Mascota "1" --> "0..*" HistorialMedico
+Mascota "1" --> "0..*" Certificado
+Mascota "1" --> "0..*" Vacuna
+@enduml
