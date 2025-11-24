@@ -18,12 +18,12 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      const res = await apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, contraseña: password }) })
+      const res = await apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) })
       const token: string = res?.token
       if (!token) throw new Error('Token no recibido')
       localStorage.setItem('token', token)
       const claims = parseJwt(token)
-      const usuario = { email: claims?.email ?? email, rol: claims?.rol ?? 'dueño', nombre: res?.usuario?.nombre ?? email, apellido: res?.usuario?.apellido ?? '' }
+      const usuario = { email: claims?.email ?? email, rol: claims?.role ?? 'dueño', nombre: res?.usuario?.nombre ?? email, apellido: res?.usuario?.apellido ?? '' }
       localStorage.setItem('usuario', JSON.stringify(usuario))
       toast({ title: 'Ingreso exitoso', description: 'Bienvenido a la clínica' })
       router.replace('/dashboard')
