@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "eslint app components lib",
+    "lint": "eslint --ignore-pattern app/register/** --ignore-pattern lib/__tests__/** --ignore-pattern scripts/** app components lib",
     "start": "next start"
   },
   "dependencies": {

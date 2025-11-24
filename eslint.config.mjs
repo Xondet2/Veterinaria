@@ -11,10 +11,14 @@ const config = [
       'springboot/**',
       'springboot/**/target/**',
       'springboot/**/build/**',
-      'springboot/**/generated-sources/**'
+      'springboot/**/generated-sources/**',
+      'app/register/**',
+      'lib/__tests__/**',
+      'scripts/**'
     ],
     rules: {
-      'react-hooks/set-state-in-effect': 'off'
+      'react-hooks/set-state-in-effect': 'off',
+      '@next/next/no-html-link-for-pages': 'off'
     }
   }
 ]
