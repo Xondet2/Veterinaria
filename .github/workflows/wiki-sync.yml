@@ -1,0 +1,61 @@
+name: Publicar Wiki
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'wiki_content/**'
+      - '.github/workflows/wiki-sync.yml'
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Java para PlantUML (opcional)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Preparar entorno
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+      - name: Clonar Wiki (si existe)
+        id: clone
+        continue-on-error: true
+        run: |
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" wiki
+
+      - name: Copiar contenido
+        if: steps.clone.outcome == 'success'
+        run: |
+          mkdir -p wiki/images
+          cp -r wiki_content/* wiki/
+          git -C wiki add .
+          git -C wiki commit -m "docs(wiki): sincronizar contenido desde repo principal"
+
+      - name: Copiar imágenes de diagramas si existen
+        if: steps.clone.outcome == 'success'
+        run: |
+          if ls docs/diagrams/*.svg 1> /dev/null 2>&1; then
+            cp -r docs/diagrams/*.svg wiki/images/
+            git -C wiki add images/*.svg || true
+            git -C wiki commit -m "docs(wiki): actualizar imágenes de diagramas" || true
+          else
+            echo "No se encontraron imágenes SVG en docs/diagrams/."
+          fi
+
+      - name: Publicar
+        if: steps.clone.outcome == 'success'
+        run: |
+          git -C wiki push
+
+      - name: Aviso si Wiki no existe
+        if: steps.clone.outcome != 'success'
+        run: |
+          echo "La Wiki no está habilitada. Actívala en Settings → Wikis para publicar."

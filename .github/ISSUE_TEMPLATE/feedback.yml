@@ -1,0 +1,26 @@
+name: Feedback de Documentación
+description: Sugerencias o problemas sobre la documentación y la wiki
+title: "docs: [breve descripción]"
+labels: [documentation]
+body:
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: ¿Qué parte de la documentación revisaste?
+    validations:
+      required: true
+  - type: textarea
+    id: utilidad
+    attributes:
+      label: Utilidad
+      description: ¿Fue clara y útil? ¿Qué faltó?
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta de mejora
+      description: Describe la mejora deseada
+    validations:
+      required: false
