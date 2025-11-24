@@ -20,5 +20,7 @@ coverage/
 dist/
 .idea/
 .pnpm-store/
-.env*
+.env
+.env.*
+!.env.example
 backup-i18n-auth.patch
