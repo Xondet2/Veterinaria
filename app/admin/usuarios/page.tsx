@@ -5,6 +5,7 @@ import RoleGuard from '@/components/layout/role-guard'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { apiFetch } from '@/lib/api'
+import { connectSync } from '@/lib/sync'
 
 type Usuario = { id: string; email: string; nombre: string; apellido: string; rol: string }
 
@@ -18,7 +19,7 @@ export default function AdminUsuariosPage() {
   async function load() {
     setLoading(true)
     try {
-      const res = await apiFetch('/api/admin/usuarios', { method: 'GET' })
+      const res = await apiFetch('/api/admin/usuarios/search?q=', { method: 'GET' })
       setUsuarios(res?.data ?? [])
     } catch (e: any) {
       setError(e?.message || 'Error al cargar usuarios')
@@ -26,15 +27,25 @@ export default function AdminUsuariosPage() {
   }
 
   useEffect(() => { load() }, [])
+  useEffect(() => {
+    const unsubscribe = connectSync((name) => { if (name === 'usuarios:created') load() })
+    return () => { unsubscribe() }
+  }, [])
 
   async function crearUsuario() {
-    await apiFetch('/api/admin/usuarios', { method: 'POST', body: JSON.stringify(form) })
+    const username = (form.email.split('@')[0] || 'user').replace(/[^a-zA-Z0-9_-]/g, '') || 'user'
+    const body = { email: form.email, username, firstName: form.nombre, lastName: form.apellido, password: form.contraseña, phone: form.telefono, role: form.rol }
+    await apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(body) })
     setForm({ email: '', nombre: '', apellido: '', contraseña: '', telefono: '', rol: 'dueño' })
     await load()
   }
 
   async function cambiarRol(id: string, rol: string) {
-    await apiFetch(`/api/admin/usuarios/${id}/rol`, { method: 'PATCH', body: JSON.stringify({ rol }) })
+    let actorId: string | undefined
+    try { const u = localStorage.getItem('usuario'); const parsed = u ? JSON.parse(u) : null; actorId = parsed?.id } catch {}
+    const headers: Record<string,string> = {}
+    if (actorId) headers['X-Actor-Id'] = actorId
+    await apiFetch(`/api/admin/usuarios/${id}/rol`, { method: 'PATCH', headers, body: JSON.stringify({ role: rol, actorId }) })
     await load()
   }
 
@@ -43,22 +54,7 @@ export default function AdminUsuariosPage() {
       <div className="space-y-6">
         <h2 className="text-xl font-semibold">Usuarios</h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border p-4 space-y-3">
-            <h3 className="font-medium">Crear usuario</h3>
-            <div className="grid gap-2">
-              <Input placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <Input placeholder="Nombre" value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} />
-              <Input placeholder="Apellido" value={form.apellido} onChange={(e) => setForm({ ...form, apellido: e.target.value })} />
-              <Input placeholder="Contraseña" type="password" value={form.contraseña} onChange={(e) => setForm({ ...form, contraseña: e.target.value })} />
-              <Input placeholder="Teléfono" value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} />
-              <select className="border rounded-md p-2" value={form.rol} onChange={(e) => setForm({ ...form, rol: e.target.value })}>
-                {roles.map(r => (<option key={r} value={r}>{r}</option>))}
-              </select>
-              <Button onClick={crearUsuario}>Crear</Button>
-            </div>
-          </div>
-
+        <div className="grid gap-4">
           <div className="rounded-lg border p-4">
             <h3 className="font-medium mb-2">Listado</h3>
             {loading && (<p>Cargando...</p>)}
