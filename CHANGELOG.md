@@ -14,3 +14,12 @@
 - Backend: corrección de BOM y formateo en clases (`Mascota`, `Usuario`, `Cita`, `VeterinariaApplication`, repositorios, `DataLoader`, `JwtTokenProvider`).
 - Maven: configuración de `UTF-8` y `source/target 17` en `pom.xml`.
 - Validación: `mvn test` OK; endpoint `GET /api/health` responde `200` en local.
+
+## 2025-11-24
+- Autenticación: se movió la validación de complejidad de contraseña al registro.
+- Login: se permite ingresar con contraseñas existentes (incluida la corta de admin).
+- Registro: se exige contraseña fuerte (8+, mayúscula, minúscula, número y símbolo).
+- Configuración: se añadió selector de idioma (es/en) y toggle de tema (claro/oscuro) con persistencia.
+- I18n: textos de interfaz, componentes UI y mensajes del sistema traducidos (login, toasts, sidebar).
+- Frontend: no se cierra sesión en errores 403; solo en 401.
+- Tests: se agregaron pruebas unitarias de autenticación (registro y login).

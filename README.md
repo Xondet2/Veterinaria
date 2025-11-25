@@ -297,10 +297,3 @@ docker run -p 3000:3000 vetclinic
 - Enlace: `https://github.com/Xondet2/Veterinaria/wiki`
 - Si la wiki no está habilitada, activa en Settings → Wikis. El workflow `Publicar Wiki` sincroniza las páginas e imágenes.
 
-## Soporte
-
-Para reportar bugs o solicitar features, crea un issue en el repositorio.
-
-## Licencia
-
-MIT
