@@ -30,7 +30,9 @@ export default function NuevoHistorialPage() {
   async function crear() {
     setLoading(true)
     try {
-      await apiFetch('/api/historial', { method: 'POST', body: JSON.stringify(form) })
+      let vetId: string | undefined
+      try { const u = localStorage.getItem('usuario'); const parsed = u ? JSON.parse(u) : null; vetId = parsed?.id } catch {}
+      await apiFetch('/api/historial', { method: 'POST', body: JSON.stringify({ ...form, vetId }) })
       router.push('/dashboard/historial')
     } catch (e: any) {
       setError(e?.message || 'No se pudo crear el registro')

@@ -23,7 +23,7 @@ export default function NuevaCitaPage() {
       try {
         const [mascotasRes, vetsRes] = await Promise.all([
           apiFetch('/api/mascotas', { method: 'GET' }),
-          apiFetch('/api/usuarios/veterinarios', { method: 'GET' }),
+          apiFetch('/api/admin/usuarios/veterinarios', { method: 'GET' }),
         ])
         setMascotas(mascotasRes?.data ?? [])
         setVets(vetsRes?.data ?? [])
@@ -43,8 +43,16 @@ export default function NuevaCitaPage() {
   async function crear() {
     setLoading(true)
     try {
-      const payload = { ...form, fechaHora: toIsoOffsetLocal(form.fechaHora) }
-      await apiFetch('/api/citas', { method: 'POST', body: JSON.stringify(payload) })
+      const payload = {
+        petId: form.mascotaId,
+        veterinarianId: form.veterinarioId,
+        startDateTime: toIsoOffsetLocal(form.fechaHora),
+        durationMinutes: form.duracionMinutos,
+        reason: form.motivo,
+      }
+      let actorId: string | undefined
+      try { const u = localStorage.getItem('usuario'); const parsed = u ? JSON.parse(u) : null; actorId = parsed?.id } catch {}
+      await apiFetch('/api/citas', { method: 'POST', body: JSON.stringify({ ...payload, actorId }) })
       router.push('/dashboard/citas')
     } catch (e: any) {
       setError(e?.message || 'No se pudo agendar la cita')

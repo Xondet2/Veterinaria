@@ -37,18 +37,20 @@ export default function NuevaMascotaPage() {
   async function onSubmit(formData: any) {
     setLoading(true)
     const payload = {
-      nombre: formData.nombre,
-      especie: formData.especie,
-      raza: formData.raza,
-      edadAños: Number(formData.edad_años),
-      pesoKg: Number(formData.peso_kg),
-      sexo: formData.sexo,
-      fechaNacimiento: formData.fecha_nacimiento,
+      name: formData.nombre,
+      species: formData.especie,
+      breed: formData.raza,
+      ageYears: Number(formData.edad_años),
+      weightKg: Number(formData.peso_kg),
+      sex: formData.sexo,
+      birthDate: formData.fecha_nacimiento,
       microchip: formData.microchip || undefined,
-      dueñoId: (rol === 'admin' || rol === 'veterinario') && dueñoId ? dueñoId : undefined,
+      ownerId: (rol === 'admin' || rol === 'veterinario') && dueñoId ? dueñoId : undefined,
     }
     try {
-      await apiFetch('/api/mascotas', { method: 'POST', body: JSON.stringify(payload) })
+      let actorId: string | undefined
+      try { const u = localStorage.getItem('usuario'); const parsed = u ? JSON.parse(u) : null; actorId = parsed?.id } catch {}
+      await apiFetch('/api/mascotas', { method: 'POST', body: JSON.stringify({ ...payload, actorId }) })
       router.push('/dashboard/mascotas')
     } finally {
       setLoading(false)
