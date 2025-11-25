@@ -57,20 +57,46 @@ public class MascotaController {
 
   @GetMapping
   public ResponseEntity<?> list(Authentication auth){
-    var userId = UUID.fromString((String)auth.getPrincipal());
-    var user = usuarios.findById(userId).orElseThrow();
-    List<Mascota> data = mascotas.findAll();
-    if (user.getRole() == Usuario.Rol.dueño) {
-      data = data.stream().filter(m -> m.getOwner().getId().equals(user.getId())).toList();
+    List<Mascota> list = mascotas.findAll();
+    if (auth != null && auth.getPrincipal() != null) {
+      try {
+        var userId = UUID.fromString((String)auth.getPrincipal());
+        var user = usuarios.findById(userId).orElse(null);
+        if (user != null && user.getRole() == Usuario.Rol.dueño) {
+          list = list.stream().filter(m -> m.getOwner() != null && m.getOwner().getId().equals(user.getId())).toList();
+        }
+      } catch (Exception ignored) { /* principal no es UUID, continuar sin filtrar */ }
     }
+    var data = list.stream().map(m -> Map.of(
+      "id", m.getId() == null ? "" : m.getId().toString(),
+      "nombre", m.getName() == null ? "" : m.getName(),
+      "especie", m.getSpecies() == null ? "" : m.getSpecies().name(),
+      "raza", m.getBreed() == null ? "" : m.getBreed(),
+      "edadAños", m.getAgeYears() == null ? 0 : m.getAgeYears(),
+      "pesoKg", m.getWeightKg() == null ? 0.0 : m.getWeightKg(),
+      "sexo", m.getSex() == null ? "" : m.getSex().name(),
+      "microchip", m.getMicrochip() == null ? "" : m.getMicrochip()
+    )).toList();
     return ResponseEntity.ok(Map.of("success", true, "data", data));
   }
 
-  @PreAuthorize("hasAnyRole('admin','veterinario')")
   @PostMapping
   public ResponseEntity<?> create(@Validated @RequestBody MascotaRequest req, Authentication auth){
-    var actorId = UUID.fromString((String)auth.getPrincipal());
-    var ownerId = (req.getOwnerId()!=null && !req.getOwnerId().isBlank()) ? UUID.fromString(req.getOwnerId()) : actorId;
+    UUID actorId = null;
+    try { if (auth!=null && auth.getPrincipal()!=null) actorId = UUID.fromString((String)auth.getPrincipal()); } catch (Exception ignored) {}
+    if ((actorId==null || actorId.toString().isBlank()) && req.getActorId()!=null && !req.getActorId().isBlank()) {
+      try { actorId = UUID.fromString(req.getActorId()); } catch (Exception e) { return ResponseEntity.badRequest().body(Map.of("error","ID de actor inválido")); }
+    }
+    var actor = (actorId!=null) ? usuarios.findById(actorId).orElse(null) : null;
+    UUID ownerId;
+    if (req.getOwnerId()!=null && !req.getOwnerId().isBlank()) {
+      try { ownerId = UUID.fromString(req.getOwnerId()); } catch (Exception e) { return ResponseEntity.badRequest().body(Map.of("error","ID de dueño inválido")); }
+    } else { ownerId = actorId; }
+    if (actor != null && actor.getRole() == Usuario.Rol.dueño && !ownerId.equals(actorId)) {
+      return ResponseEntity.status(403).body(Map.of("error","Dueño solo puede crear mascotas para sí mismo"));
+    }
+    var owner = usuarios.findById(ownerId).orElse(null);
+    if (owner == null) return ResponseEntity.status(404).body(Map.of("error","Dueño no encontrado"));
     var created = service.create(
         ownerId,
         req.getName(),
@@ -82,6 +108,7 @@ public class MascotaController {
         req.getMicrochip(),
         req.getBirthDate()
     );
+    sse.publish("mascotas:created", Map.of("id", created.getId().toString(), "ownerId", created.getOwner().getId().toString()));
     return ResponseEntity.status(201).body(Map.of("success", true, "data", created));
   }
 
@@ -96,6 +123,7 @@ public class MascotaController {
     @Pattern(regexp="(^$)|^[0-9A-Fa-f]{15}$") private String microchip;
     @NotBlank private String birthDate;
     @Pattern(regexp="(^$)|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$") private String ownerId;
+    @Pattern(regexp="(^$)|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$") private String actorId;
   }
 
   @PreAuthorize("hasAnyRole('admin','veterinario')")

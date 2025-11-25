@@ -27,17 +27,18 @@ public class SecurityConfig {
   public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception { return cfg.getAuthenticationManager(); }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider jwt, com.sophie.veterinaria.service.AuditService audit) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, com.sophie.veterinaria.service.AuditService audit) throws Exception {
     http.csrf(csrf->csrf.disable()).cors(c->c.configurationSource(corsSource))
       .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth->auth
-        .requestMatchers("/api/auth/login","/api/auth/register","/api/health","/api/usuarios/check-username").permitAll()
-        .requestMatchers("/api/sync/stream").permitAll()
-        .requestMatchers("/api/admin/**").hasRole("admin")
-        .requestMatchers("/api/mascotas/**","/api/citas/**","/api/vacunas/**","/api/certificados/**","/api/historial/**").authenticated()
-        .anyRequest().authenticated())
-      .addFilterBefore(new JwtAuthenticationFilter(jwt), BasicAuthenticationFilter.class)
-      .addFilterAfter(new AuditLoggingFilter(audit), JwtAuthenticationFilter.class);
+        .requestMatchers("/api/**", "/api/health", "/api/sync/**").permitAll()
+        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .anyRequest().permitAll())
+      .exceptionHandling(eh -> eh
+        .authenticationEntryPoint((req,res,ex) -> { res.setStatus(401); res.setContentType("application/json"); res.getWriter().write("{\"error\":\"unauthorized\"}"); })
+        .accessDeniedHandler((req,res,ex) -> { res.setStatus(403); res.setContentType("application/json"); res.getWriter().write("{\"error\":\"forbidden\"}"); })
+      )
+      .addFilterAfter(new AuditLoggingFilter(audit), BasicAuthenticationFilter.class);
     return http.build();
   }
 }

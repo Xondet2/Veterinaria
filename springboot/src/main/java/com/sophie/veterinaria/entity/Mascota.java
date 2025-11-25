@@ -21,14 +21,14 @@ public class Mascota {
   @Column(nullable = false, length = 100)
   private String name;
 
-  @Enumerated(EnumType.STRING)
+  @Convert(converter = com.sophie.veterinaria.entity.converter.EspecieConverter.class)
   @Column(nullable = false, length = 20)
   private Especie species;
 
   @Column(nullable = false, length = 100)
   private String breed;
 
-  @Enumerated(EnumType.STRING)
+  @Convert(converter = com.sophie.veterinaria.entity.converter.SexoConverter.class)
   @Column(nullable = false, length = 10)
   private Sexo sex;
 

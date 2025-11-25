@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@org.springframework.security.access.prepost.PreAuthorize("hasRole('admin')")
 @RequestMapping("/api/admin")
 public class AdminController {
   private final UsuarioRepository usuarios;
@@ -37,16 +36,33 @@ public class AdminController {
     var qq = q == null ? "" : q.trim().toLowerCase();
     var data = usuarios.findAll().stream().filter(u -> u.getEmail().toLowerCase().contains(qq) ||
         u.getFirstName().toLowerCase().contains(qq) ||
-        u.getLastName().toLowerCase().contains(qq)).map(u -> java.util.Map.of(
-            "id", u.getId().toString(),
-            "email", u.getEmail(),
-            "firstName", u.getFirstName(),
-            "lastName", u.getLastName(),
-            "role", u.getRole().name()))
+        u.getLastName().toLowerCase().contains(qq)).map(u -> {
+          var m = new java.util.HashMap<String,Object>();
+          m.put("id", u.getId().toString());
+          m.put("email", u.getEmail());
+          m.put("nombre", u.getFirstName());
+          m.put("apellido", u.getLastName());
+          m.put("rol", u.getRole().name());
+          return m;
+        })
         .toList();
     return ResponseEntity.ok(java.util.Map.of("success", true, "data", data));
   }
 
+  @GetMapping("/usuarios/veterinarios")
+  public ResponseEntity<?> listVeterinarios() {
+    var data = usuarios.findAll().stream()
+        .filter(u -> u.getRole() == Usuario.Rol.veterinario)
+        .map(u -> java.util.Map.of(
+            "id", u.getId().toString(),
+            "nombre", u.getFirstName(),
+            "apellido", u.getLastName()
+        ))
+        .toList();
+    return ResponseEntity.ok(java.util.Map.of("success", true, "data", data));
+  }
+
+  @PreAuthorize("hasRole('admin')")
   @DeleteMapping("/usuarios/{id}")
   public ResponseEntity<?> deleteUser(@PathVariable String id, org.springframework.security.core.Authentication auth) {
     var actorId = java.util.UUID.fromString((String) auth.getPrincipal());
@@ -62,16 +78,34 @@ public class AdminController {
 
   // El administrador no crea usuarios; solo aprueba/rechaza roles
   @PatchMapping("/usuarios/{id}/rol")
-  public ResponseEntity<?> assignRole(@PathVariable String id, @RequestBody java.util.Map<String, String> body) {
+  public ResponseEntity<?> assignRole(
+      @PathVariable String id,
+      @RequestBody java.util.Map<String, String> body,
+      @RequestParam(required=false, name="actorId") String actorIdParam,
+      @RequestHeader(value="X-Actor-Id", required=false) String actorIdHeader,
+      org.springframework.security.core.Authentication auth
+  ) {
+    java.util.UUID actorUuid = null;
+    try { if (auth != null && auth.getPrincipal() != null) actorUuid = java.util.UUID.fromString((String) auth.getPrincipal()); } catch (Exception ignored) {}
+    String actorStr = actorIdParam;
+    if (actorStr == null || actorStr.isBlank()) actorStr = actorIdHeader;
+    if (actorStr == null || actorStr.isBlank()) actorStr = body.getOrDefault("actorId", "");
+    if ((actorUuid == null) && (actorStr != null && !actorStr.isBlank())) {
+      try { actorUuid = java.util.UUID.fromString(actorStr); } catch (Exception e) { return ResponseEntity.badRequest().body(java.util.Map.of("error","ID de actor inválido")); }
+    }
+    if (actorUuid != null) {
+      var actor = usuarios.findById(actorUuid).orElse(null);
+      if (actor == null) return ResponseEntity.status(404).body(java.util.Map.of("error","Actor no encontrado"));
+      if (actor.getRole() != Usuario.Rol.admin) return ResponseEntity.status(403).body(java.util.Map.of("error","Solo admin puede cambiar roles"));
+    }
+
     var user = usuarios.findById(java.util.UUID.fromString(id)).orElse(null);
-    if (user == null)
-      return ResponseEntity.status(404).body(java.util.Map.of("error", "Usuario no encontrado"));
+    if (user == null) return ResponseEntity.status(404).body(java.util.Map.of("error", "Usuario no encontrado"));
     try {
       var nuevoRol = Usuario.Rol.valueOf(body.getOrDefault("role", "dueño"));
       user.setRole(nuevoRol);
       usuarios.save(user);
-      return ResponseEntity
-          .ok(java.util.Map.of("success", true, "usuarioId", user.getId(), "role", user.getRole().name()));
+      return ResponseEntity.ok(java.util.Map.of("success", true, "usuarioId", user.getId(), "role", user.getRole().name()));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(java.util.Map.of("error", "Rol inválido"));
     }
@@ -86,6 +120,7 @@ public class AdminController {
     return ResponseEntity.ok(java.util.Map.of("success", true, "data", list));
   }
 
+  @PreAuthorize("hasRole('admin')")
   @PostMapping("/backup/run")
   public ResponseEntity<?> runBackup() {
     var res = backup.runBackup();

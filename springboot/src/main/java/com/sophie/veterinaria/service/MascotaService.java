@@ -33,13 +33,18 @@ public class MascotaService {
     var m = new Mascota();
     m.setOwner(owner);
     m.setName(name);
-    m.setSpecies(Mascota.Especie.valueOf(species));
+    m.setSpecies(Mascota.Especie.valueOf(species.trim().toLowerCase()));
     m.setBreed(breed);
     m.setAgeYears(ageYears);
     m.setWeightKg(weightKg);
-    m.setSex(Mascota.Sexo.valueOf(sex));
+    m.setSex(Mascota.Sexo.valueOf(sex.trim().toLowerCase()));
     m.setMicrochip(microchip);
-    m.setBirthDate(LocalDate.parse(birthDate));
+    try {
+      m.setBirthDate(LocalDate.parse(birthDate));
+    } catch (java.time.format.DateTimeParseException ex) {
+      var fmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+      m.setBirthDate(LocalDate.parse(birthDate, fmt));
+    }
     m.setStatus(Mascota.Estado.activo);
     return mascotas.save(m);
   }
