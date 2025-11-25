@@ -116,13 +116,12 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
   body {
     @apply bg-background text-foreground font-sans;
     transition-property: background-color, color, border-color;
     transition-duration: 200ms;
     transition-timing-function: ease;
   }
+  img { @apply max-w-full h-auto block rounded-md; }
 }
